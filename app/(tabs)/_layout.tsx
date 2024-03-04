@@ -50,22 +50,22 @@ export default function TabLayout() {
       <Tabs.Screen
         name="two"
         options={{
-          title: 'Tab Two',
+          title: 'Profile',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
       <Tabs.Screen
         name="three"
         options={{
-          title: 'Tab Three',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Community",
+          tabBarIcon: ({ color }) => <TabBarIcon name="anchor" color={color} />,
         }}
       />
       <Tabs.Screen
         name="four"
         options={{
           title: 'Experiments',
-          headerTitle : "NHCE CSE-DS Experiments | ConnectCraft",
+          headerTitle : "NHCE CSE-DS Lab Experiments",
           tabBarIcon: ({ color }) => <TabBarIcon name="retweet" color={color} />
         }}
       />

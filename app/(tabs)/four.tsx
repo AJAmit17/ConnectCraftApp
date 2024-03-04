@@ -37,7 +37,24 @@ const App = () => {
 
     return (
         <View style={{ flex: 1, padding: 24 }}>
-            <View>
+            {
+                isLoading ? (
+                    <ActivityIndicator size="large" color="blue" />
+                ) : (
+                    <View>
+                        <Text style={{ color: 'white' }}>ID: {experiment?._id}</Text>
+                        <Text style={{ color: 'white' }}>Year: {experiment?.year}</Text>
+                        <Text style={{ color: 'white' }}>Ace Year: {experiment?.aceYear}</Text>
+                        <Text style={{ color: 'white' }}>Branch: {experiment?.Branch}</Text>
+                        <Text style={{ color: 'white' }}>Code: {experiment?.CCode}</Text>
+                        <Text style={{ color: 'white' }}>Name: {experiment?.CName}</Text>
+                        <Text style={{ color: 'white' }}>Experiment Description: {experiment?.ExpDesc}</Text>
+                        <Text style={{ color: 'white' }}>Experiment Name: {experiment?.ExpName}</Text>
+                        <Text style={{ color: 'white' }}>Experiment Solution: {experiment?.ExpSoln}</Text>
+                    </View>
+                )
+            }
+            {/* <View>
                 <Text style={{ color: 'white' }}>ID: {experiment?._id}</Text>
                 <Text style={{ color: 'white' }}>Year: {experiment?.year}</Text>
                 <Text style={{ color: 'white' }}>Ace Year: {experiment?.aceYear}</Text>
@@ -47,7 +64,7 @@ const App = () => {
                 <Text style={{ color: 'white' }}>Experiment Description: {experiment?.ExpDesc}</Text>
                 <Text style={{ color: 'white' }}>Experiment Name: {experiment?.ExpName}</Text>
                 <Text style={{ color: 'white' }}>Experiment Solution: {experiment?.ExpSoln}</Text>
-            </View>
+            </View> */}
         </View>
     );
 };

@@ -1,24 +1,20 @@
+import { Community } from '@/Types';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, Image, ScrollView, TouchableOpacity } from 'react-native';
 
-type Community = {
-  _id: string;
-  clerkId: string;
-  name: string;
-  username: string;
-  email: string;
-  password?: string;
-  bio?: string;
-  picture: string;
-  location?: string;
-  portfolioWebsite?: string;
-  reputation?: string;
-  joinedAt?: Date;
-};
-
 const Three = ({ community }: { community: Community }) => {
+  const router = useRouter();
+  const handlePress = () => {
+    router.push({
+      pathname: "/community/[id]",
+      params: { id : community.clerkId },
+    })
+    console.log(community);
+  };
+
   return (
-    <TouchableOpacity onPress={() => console.log(community)} style={{ marginBottom: 20, padding: 10, backgroundColor: '#eee', borderRadius: 10 , width : 300 , height : 300 }}>
+    <TouchableOpacity onPress={handlePress} style={{ marginBottom: 20, padding: 10, backgroundColor: '#eee', borderRadius: 10, width: 300, height: 300 }} >
       <Image source={{ uri: community.picture }} style={{ width: 100, height: 100, borderRadius: 50 }} />
       <Text>Name: {community.name}</Text>
       <Text>Username: {community.username}</Text>

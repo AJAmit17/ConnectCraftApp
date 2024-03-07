@@ -1,72 +1,81 @@
+import { Experiment } from '@/Types';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 
-type Experiment = {
-    _id: string;
-    year: number;
-    aceYear: string;
-    Branch: string;
-    CCode: string;
-    CName: string;
-    ExpNo: number;
-    ExpName: string;
-    ExpDesc: string;
-    ExpSoln: string;
-    __v: number;
+const App = ({ experiment } : { experiment: Experiment }) => {
+  const router = useRouter();
+
+  const handlePress = () => {
+    router.push({ pathname: "/experiment/[id]", params: { id: experiment._id } });
+  };
+  return (
+    <TouchableOpacity onPress={handlePress} style={styles.card}>
+      <Text style={styles.text}>Year: {experiment?.year}</Text>
+      <Text style={styles.text}>ACE Year: {experiment?.aceYear}</Text>
+      <Text style={styles.text}>Branch: {experiment?.Branch}</Text>
+      <Text style={styles.text}>Course Code: {experiment?.CCode}</Text>
+      <Text style={styles.text}>Course Name: {experiment?.CName}</Text>
+      <Text style={styles.text}>Experiment Number: {experiment?.ExpNo}</Text>
+      <Text style={styles.text}>Experiment Name: {experiment?.ExpName}</Text>
+      <Text style={styles.text}>Experiment Name: {experiment.ExpDesc}</Text>
+    </TouchableOpacity>
+  );
 };
 
-const App = () => {
-    const [isLoading, setLoading] = useState(true);
-    const [experiment, setExperiment] = useState<Experiment | null>(null);
+const ExperimentList = () => {
+  const [isLoading, setLoading] = useState(true);
+  const [experiments, setExperiments] = useState<Experiment[]>([]);
 
-    const getExperiment = async () => {
-        try {
-            const response = await fetch('https://connect-craft-git-main-ajamit17.vercel.app/api/experiments/65df0ff5b2cbab70b057b4cc');
-            const json = await response.json();
-            setExperiment(json);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://connect-craft.vercel.app/api/experiments');
+        const json = await response.json();
+        setExperiments(json.experiments);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    useEffect(() => {
-        getExperiment();
-    }, []);
+    fetchData();
+  }, []);
 
-    return (
-        <View style={{ flex: 1, padding: 24 }}>
-            {
-                isLoading ? (
-                    <ActivityIndicator size="large" color="blue" />
-                ) : (
-                    <View>
-                        <Text style={{ color: 'white' }}>ID: {experiment?._id}</Text>
-                        <Text style={{ color: 'white' }}>Year: {experiment?.year}</Text>
-                        <Text style={{ color: 'white' }}>Ace Year: {experiment?.aceYear}</Text>
-                        <Text style={{ color: 'white' }}>Branch: {experiment?.Branch}</Text>
-                        <Text style={{ color: 'white' }}>Code: {experiment?.CCode}</Text>
-                        <Text style={{ color: 'white' }}>Name: {experiment?.CName}</Text>
-                        <Text style={{ color: 'white' }}>Experiment Description: {experiment?.ExpDesc}</Text>
-                        <Text style={{ color: 'white' }}>Experiment Name: {experiment?.ExpName}</Text>
-                        <Text style={{ color: 'white' }}>Experiment Solution: {experiment?.ExpSoln}</Text>
-                    </View>
-                )
-            }
-            {/* <View>
-                <Text style={{ color: 'white' }}>ID: {experiment?._id}</Text>
-                <Text style={{ color: 'white' }}>Year: {experiment?.year}</Text>
-                <Text style={{ color: 'white' }}>Ace Year: {experiment?.aceYear}</Text>
-                <Text style={{ color: 'white' }}>Branch: {experiment?.Branch}</Text>
-                <Text style={{ color: 'white' }}>Code: {experiment?.CCode}</Text>
-                <Text style={{ color: 'white' }}>Name: {experiment?.CName}</Text>
-                <Text style={{ color: 'white' }}>Experiment Description: {experiment?.ExpDesc}</Text>
-                <Text style={{ color: 'white' }}>Experiment Name: {experiment?.ExpName}</Text>
-                <Text style={{ color: 'white' }}>Experiment Solution: {experiment?.ExpSoln}</Text>
-            </View> */}
-        </View>
-    );
+  return (
+    <ScrollView style={{ flex: 1 }}>
+      <View style={{ justifyContent: 'center', alignItems: 'center', paddingVertical: 20 }}>
+        {isLoading ? (
+          <ActivityIndicator size="large" color="blue" />
+        ) : (
+          experiments.map((exp) => <App key={exp._id} experiment={exp} />)
+        )}
+      </View>
+    </ScrollView>
+  );
 };
 
-export default App;
+const styles = StyleSheet.create({
+  card: {
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    width: 300,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  text: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+});
+
+export default ExperimentList;

@@ -1,77 +1,97 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
-
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import { PaperProvider, MD3LightTheme, adaptNavigationTheme } from 'react-native-paper';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet } from 'react-native';
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+// Custom theme configuration
+const theme = {
+  ...MD3LightTheme,
+  colors: {
+    ...MD3LightTheme.colors,
+    primary: '#6200ee',
+    secondary: '#03dac6',
+    background: '#f6f6f6',
+    surface: '#ffffff',
+  },
+};
+
+const { LightTheme } = adaptNavigationTheme({ reactNavigationLight: DefaultTheme });
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <Ionicons name="person-circle" size={24} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="two"
-        options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="three"
-        options={{
-          title: "Community",
-          tabBarIcon: ({ color }) => <Ionicons name="people" size={24} color={color} />,
-          headerRight(props) {
-            return (
-              <Link href="/modal" asChild>
-                <Pressable>
-                  {({ pressed }) => (
-                    <FontAwesome
-                      name="info-circle"
-                      size={25}
-                      color={Colors[colorScheme ?? 'light'].text}
-                      style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                    />
-                  )}
-                </Pressable>
-              </Link>
-            );
-          },
-        }}
-      />
-      <Tabs.Screen
-        name="four"
-        options={{
-          title: 'Experiments',
-          headerTitle: "NHCE CSE-DS Lab Experiments",
-          tabBarIcon: ({ color }) => <Ionicons name="flask" size={24} color={color} />
-        }}
-      />
-    </Tabs>
+    <PaperProvider theme={theme}>
+        <Tabs
+          screenOptions={{
+            tabBarStyle: styles.tabBar,
+            tabBarActiveTintColor: theme.colors.primary,
+            tabBarInactiveTintColor: '#757575',
+            headerStyle: {
+              backgroundColor: theme.colors.surface,
+              elevation: 0,
+              shadowOpacity: 0,
+            },
+            headerTintColor: theme.colors.primary,
+            tabBarLabelStyle: styles.tabBarLabel,
+          }}
+        >
+          <Tabs.Screen
+            name="index"
+            options={{
+              headerShown: false,
+              tabBarIcon: ({ color, focused }) => (
+                <Ionicons 
+                  name={focused ? "home" : "home-outline"} 
+                  size={24} 
+                  color={color}
+                />
+              ),
+              tabBarLabel: 'Home',
+            }}
+          />
+          <Tabs.Screen
+            name="two"
+            options={{
+              title: "Experiments",
+              headerTitle: "NHCE CSE-DS Lab Experiments",
+              tabBarIcon: ({ color, focused }) => (
+                <Ionicons 
+                  name={focused ? "flask" : "flask-outline"} 
+                  size={24} 
+                  color={color}
+                />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name="three"
+            options={{
+              title: "Community",
+              tabBarIcon: ({ color, focused }) => (
+                <Ionicons 
+                  name={focused ? "people" : "people-outline"} 
+                  size={24} 
+                  color={color}
+                />
+              ),
+            }}
+          />
+        </Tabs>
+    </PaperProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBar: {
+    backgroundColor: '#ffffff',
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+    height: 60,
+    paddingBottom: 5,
+    paddingTop: 5,
+  },
+  tabBarLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+});

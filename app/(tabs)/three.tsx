@@ -8,7 +8,7 @@ const Three = ({ community }: { community: Community }) => {
   const handlePress = () => {
     router.push({
       pathname: "/community/[id]",
-      params: { id : community.clerkId },
+      params: { id: community.clerkId },
     })
     console.log(community);
   };

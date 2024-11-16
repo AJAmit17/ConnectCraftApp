@@ -1,31 +1,40 @@
-import { StyleSheet } from 'react-native';
+import ExperimentCard from '@/components/ExperimentCard';
+import { Experiment } from '@/Types';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, View, StyleSheet } from 'react-native';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+const ExperimentList = () => {
+  const [isLoading, setLoading] = useState(true);
+  const [experiments, setExperiments] = useState<Experiment[]>([]);
 
-export default function TabTwoScreen() {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://connect-craft.vercel.app/api/experiments');
+        const json = await response.json();
+        setExperiments(json.experiments);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
-    </View>
+    <ScrollView style={{ flex: 1 }}>ccc
+      <View style={{ justifyContent: 'center', alignItems: 'center', paddingVertical: 20 }}>
+        {isLoading ? (
+          <ActivityIndicator size="large" color="blue" />
+        ) : (
+          experiments.map((exp) => <ExperimentCard key={exp._id} experiment={exp} />)
+        )}
+      </View>
+    </ScrollView>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
+
+export default ExperimentList;
